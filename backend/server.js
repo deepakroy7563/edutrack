@@ -33,6 +33,18 @@ app.use('/api/timetable', require('./routes/timetableRoutes'));
 app.use('/api/fees', require('./routes/feeRoutes'));
 app.use('/api/school', require('./routes/schoolRoutes'));
 
+// Temporary seed route (can be deleted or secured after use)
+app.get('/api/seed-database', async (req, res) => {
+  try {
+    const seedDatabase = require('./seeds/seed');
+    await seedDatabase(false); // pass false so it doesn't call process.exit()
+    res.json({ success: true, message: 'Database seeded successfully! You can now log in.' });
+  } catch (err) {
+    console.error('API Seeding Error:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // Root route
 app.get('/', (req, res) => {
   res.send('EduTrack School Management & Attendance System API is running...');

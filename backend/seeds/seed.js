@@ -15,7 +15,7 @@ const School = require('../models/School');
 // Load environment variables
 dotenv.config();
 
-const seedDatabase = async () => {
+const seedDatabase = async (shouldExit = true) => {
   try {
     // Connect to database
     await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/edutrack');
@@ -559,11 +559,21 @@ const seedDatabase = async () => {
     console.log('4. Parent:   parent1@edutrack.com          / password123 (Michael Davis, Dad of Alex & Chloe)');
     console.log('=========================================\n');
 
-    process.exit(0);
+    if (shouldExit) {
+      process.exit(0);
+    }
   } catch (error) {
     console.error('Seeding Process Error:', error);
-    process.exit(1);
+    if (shouldExit) {
+      process.exit(1);
+    } else {
+      throw error;
+    }
   }
 };
 
-seedDatabase();
+if (require.main === module) {
+  seedDatabase(true);
+} else {
+  module.exports = seedDatabase;
+}
