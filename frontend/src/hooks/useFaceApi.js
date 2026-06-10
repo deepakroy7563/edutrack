@@ -32,9 +32,13 @@ export const useFaceApi = () => {
             MODEL_URL = '/models';
           } catch (err) {
             console.warn('Frontend static models not found or returned invalid JSON. Falling back to backend server...', err);
-            MODEL_URL = typeof window !== 'undefined'
-              ? `${window.location.protocol}//${window.location.hostname}:5000/models`
-              : 'http://localhost:5000/models';
+            const backendApiUrl = import.meta.env.VITE_API_URL || '';
+            const backendBaseUrl = backendApiUrl.endsWith('/api')
+              ? backendApiUrl.slice(0, -4)
+              : backendApiUrl || (typeof window !== 'undefined'
+                ? `${window.location.protocol}//${window.location.hostname}:5000`
+                : 'http://localhost:5000');
+            MODEL_URL = `${backendBaseUrl}/models`;
           }
 
           console.log('Loading face-api.js models from:', MODEL_URL);

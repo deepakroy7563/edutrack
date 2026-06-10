@@ -29,6 +29,11 @@ const REGISTRATION_STEPS = [
   { id: 4, label: 'Turn Right', instruction: 'Turn your head slightly to the right.', icon: ChevronsRight, validator: (m) => m && m.headPosition === 'Right' }
 ];
 
+const getBackendUrl = () => {
+  const backendApiUrl = import.meta.env.VITE_API_URL || '';
+  return backendApiUrl.endsWith('/api') ? backendApiUrl.slice(0, -4) : 'http://localhost:5000';
+};
+
 const FaceRegistration = () => {
   const [role, setRole] = useState('student'); // student | teacher
   const [usersList, setUsersList] = useState([]);
